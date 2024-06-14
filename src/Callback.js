@@ -1,21 +1,22 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { getToken } from './auth';
 
 const Callback = () =>{
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(()=>{
         const handleRedirect = async () =>{
             const code = new URLSearchParams(location.search).get('code');
             if(code){
                 await getToken(code);
-                window.location.replace('/');
+                navigate('/playlist');
             }
         };
         handleRedirect();
-    }, [location.search]);
+    }, [location.search, navigate]);
 
     return (
         <div>
