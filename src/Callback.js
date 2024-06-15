@@ -12,7 +12,7 @@ const Callback = () =>{
             const code = new URLSearchParams(location.search).get('code');
             if(code){
                 await getToken(code);
-                navigate('/playlist');
+                navigate('/menu');
             }
         };
         handleRedirect();

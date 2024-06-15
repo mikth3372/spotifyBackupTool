@@ -3,6 +3,15 @@ const generateRandomString = (length) => {
     const values = crypto.getRandomValues(new Uint8Array(length));
     return values.reduce((acc, x) => acc + possible[x % possible.length], "");
   };
+
+export const checkAndRefreshToken = async () => {
+    const expiresAt = localStorage.getItem('expires_at');
+    const currentTime = new Date().getTime();
+  
+    if (currentTime > expiresAt) {
+      await getRefreshToken();
+    }
+  };  
   
   const sha256 = async (plain) => {
     const encoder = new TextEncoder();
@@ -67,8 +76,16 @@ const generateRandomString = (length) => {
   
     const response = await fetch(url, payload);
     const data = await response.json();
+    if (data.error) {
+      console.error(data.error);
+      return;
+    }
     localStorage.setItem('access_token', data.access_token);
     localStorage.setItem('refresh_token', data.refresh_token);
+    const expiresIn = data.expires_in * 100000 // Convert to milliseconds
+    const expiresAt = new Date().getTime() + expiresIn;
+    localStorage.setItem('expires_at', expiresAt);
+    console.log('access is',localStorage.getItem('access_token'));
   };
   
   export const getRefreshToken = async () => {
