@@ -1,3 +1,6 @@
+const clientId = process.env.REACT_APP_CLIENT_ID;
+const tokenUrl = "https://accounts.spotify.com/api/token";
+
 const generateRandomString = (length) => {
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const values = crypto.getRandomValues(new Uint8Array(length));
@@ -37,8 +40,7 @@ export const checkAndRefreshToken = async () => {
 
   export const redirectToSpotify = async () => {
     const codeChallenge = await generatePKCEChallenge();
-    const clientId = '0c08a9fe82c344a8bad5319cafe76465'; // Replace with your client ID
-    const redirectUri = 'http://localhost:3000/callback'; // Replace with your redirect URI
+    const redirectUri = 'http://localhost:3000/callback'; 
     const scope = 'user-read-private user-read-email playlist-read-private';
   
     const authUrl = new URL("https://accounts.spotify.com/authorize");
@@ -56,9 +58,8 @@ export const checkAndRefreshToken = async () => {
   
   export const getToken = async (code) => {
     const codeVerifier = localStorage.getItem('code_verifier');
-    const clientId = '0c08a9fe82c344a8bad5319cafe76465'; // Replace with your client ID
-    const redirectUri = 'http://localhost:3000/callback'; // Replace with your redirect URI
-    const url = "https://accounts.spotify.com/api/token";
+    const redirectUri = 'http://localhost:3000/callback';
+    
   
     const payload = {
       method: 'POST',
@@ -74,7 +75,7 @@ export const checkAndRefreshToken = async () => {
       }),
     };
   
-    const response = await fetch(url, payload);
+    const response = await fetch(tokenUrl, payload);
     const data = await response.json();
     if (data.error) {
       console.error(data.error);
@@ -82,15 +83,14 @@ export const checkAndRefreshToken = async () => {
     }
     localStorage.setItem('access_token', data.access_token);
     localStorage.setItem('refresh_token', data.refresh_token);
-    const expiresIn = data.expires_in * 100000 // Convert to milliseconds
+    const expiresIn = data.expires_in * 100000;
     const expiresAt = new Date().getTime() + expiresIn;
     localStorage.setItem('expires_at', expiresAt);
     console.log('access is',localStorage.getItem('access_token'));
   };
   
   export const getRefreshToken = async () => {
-    const refreshToken = localStorage.getItem('refresh_token');
-    const clientId = 'your_client_id'; // Replace with your client ID
+    const refreshToken = localStorage.getItem('refresh_token'); 
     const url = "https://accounts.spotify.com/api/token";
   
     const payload = {

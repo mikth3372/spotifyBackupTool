@@ -1,4 +1,3 @@
-import React, {useState, useEffect} from "react";
 
 import { redirectToSpotify } from "./auth";
 
@@ -30,7 +29,7 @@ const Home = () =>{
 
     return (
         <div className="home-container">
-            <h1 className="home-title"> spotify pkce auth</h1>
+            <h1 className="home-title"> Spotify Playlist Backup Tool</h1>
             <button className="home-button" onClick={redirectToSpotify}>Login with Spotify</button>
             {/* <h2>My Songs</h2> */}
             {/* {playlists && playlists.length>0  ? (
